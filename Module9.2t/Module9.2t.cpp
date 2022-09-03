@@ -1,180 +1,95 @@
-﻿// Module9.2t.cpp : Определяет точку входа для приложения.
-//
+﻿#include <windows.h>
+#include <objidl.h>
+#include <gdiplus.h>
 
-#include "framework.h"
-#include "Module9.2t.h"
+using namespace Gdiplus;
+#pragma comment(lib, "Gdiplus.lib")
 
-#define MAX_LOADSTRING 100
+RECT rect;
 
-// Глобальные переменные:
-HINSTANCE hInst;                                // текущий экземпляр
-WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
-WCHAR szWindowClass[MAX_LOADSTRING];            // имя класса главного окна
-
-// Отправить объявления функций, включенных в этот модуль кода:
-ATOM                MyRegisterClass(HINSTANCE hInstance);
-BOOL                InitInstance(HINSTANCE, int);
-LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+void DrawBackground(HDC hdc)
 {
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
+    Graphics graphics(hdc);
+    // Create an Image object.
+    Image image(L"C:/Users/ADMIN/Downloads/Back.jpg");
+    // Create a Pen object.
+    /*Pen pen(Color(255, 255, 0, 0), 2);*/
+    // Draw the original source image.
+    graphics.DrawImage(&image, 0, 0, rect.right - rect.left, rect.bottom - rect.top);
+    // Create a Rect object that specifies the destination of the image.
+    // Rect destRect(200, 50, 150, 75);
+    //// Draw the rectangle that bounds the image.
+    // graphics.DrawRectangle(&pen, destRect);
+    //// Draw the image.
+    // graphics.DrawImage(&image, destRect);
+}
 
-    // TODO: Разместите код здесь.
+LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-    // Инициализация глобальных строк
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_MODULE92T, szWindowClass, MAX_LOADSTRING);
-    MyRegisterClass(hInstance);
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
+{
+    ULONG_PTR token;
+    GdiplusStartupInput input = {0};
+    input.GdiplusVersion = 1;
+    GdiplusStartup(&token, &input, NULL);
 
-    // Выполнить инициализацию приложения:
-    if (!InitInstance (hInstance, nCmdShow))
+    const wchar_t CLASS_NAME[] = L"Sample Window Class";
+    WNDCLASS wc = {};
+    wc.lpfnWndProc = &WindowProc;  // attach this callback procedure
+    wc.hInstance = hInstance;      // handle to application instance
+    wc.lpszClassName = CLASS_NAME;
+    RegisterClass(&wc);  // register wc
+    // Create the window.
+    HWND hwnd = CreateWindowEx(0,     // Optional window styles.
+        CLASS_NAME,                   // Window class
+        L"Learn to Program Windows",  // Window text
+        WS_OVERLAPPEDWINDOW,          // Window style
+
+        // Size and position
+        CW_USEDEFAULT, CW_USEDEFAULT, 500, 500,
+
+        NULL,       // Parent window
+        NULL,       // Menu
+        hInstance,  // Instance handle
+        NULL        // Additional application data
+    );
+
+    if (hwnd != NULL)
     {
-        return FALSE;
-    }
+        ShowWindow(hwnd, nCmdShow);
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MODULE92T));
-
-    MSG msg;
-
-    // Цикл основного сообщения:
-    while (GetMessage(&msg, nullptr, 0, 0))
-    {
-        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        MSG msg;
+        while (GetMessage(&msg, NULL, 0, 0) > 0)
         {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
     }
 
-    return (int) msg.wParam;
-}
-
-
-
-//
-//  ФУНКЦИЯ: MyRegisterClass()
-//
-//  ЦЕЛЬ: Регистрирует класс окна.
-//
-ATOM MyRegisterClass(HINSTANCE hInstance)
-{
-    WNDCLASSEXW wcex;
-
-    wcex.cbSize = sizeof(WNDCLASSEX);
-
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MODULE92T));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_MODULE92T);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
-
-    return RegisterClassExW(&wcex);
-}
-
-//
-//   ФУНКЦИЯ: InitInstance(HINSTANCE, int)
-//
-//   ЦЕЛЬ: Сохраняет маркер экземпляра и создает главное окно
-//
-//   КОММЕНТАРИИ:
-//
-//        В этой функции маркер экземпляра сохраняется в глобальной переменной, а также
-//        создается и выводится главное окно программы.
-//
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
-{
-   hInst = hInstance; // Сохранить маркер экземпляра в глобальной переменной
-
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
-
-   if (!hWnd)
-   {
-      return FALSE;
-   }
-
-   ShowWindow(hWnd, nCmdShow);
-   UpdateWindow(hWnd);
-
-   return TRUE;
-}
-
-//
-//  ФУНКЦИЯ: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  ЦЕЛЬ: Обрабатывает сообщения в главном окне.
-//
-//  WM_COMMAND  - обработать меню приложения
-//  WM_PAINT    - Отрисовка главного окна
-//  WM_DESTROY  - отправить сообщение о выходе и вернуться
-//
-//
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    switch (message)
-    {
-    case WM_COMMAND:
-        {
-            int wmId = LOWORD(wParam);
-            // Разобрать выбор в меню:
-            switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
-        }
-        break;
-    case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Добавьте сюда любой код прорисовки, использующий HDC...
-            EndPaint(hWnd, &ps);
-        }
-        break;
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    }
+    GdiplusShutdown(token);
     return 0;
 }
 
-// Обработчик сообщений для окна "О программе".
-INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+// callback procedure for this window, takes in all the window details
+LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    UNREFERENCED_PARAMETER(lParam);
-    switch (message)
+    switch (uMsg)
     {
-    case WM_INITDIALOG:
-        return (INT_PTR)TRUE;
+        case WM_CREATE: SetTimer(hwnd, 1, 20, NULL); break;
+        case WM_TIMER: InvalidateRect(hwnd, NULL, FALSE); break;
+        case WM_DESTROY: PostQuitMessage(0); return 0;
 
-    case WM_COMMAND:
-        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+        case WM_PAINT:
         {
-            EndDialog(hDlg, LOWORD(wParam));
-            return (INT_PTR)TRUE;
+            PAINTSTRUCT ps;
+            HDC hdc = BeginPaint(hwnd, &ps);
+            // FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
+            GetWindowRect(hwnd, &rect);
+            DrawBackground(hdc);
+            EndPaint(hwnd, &ps);
+            return 0;
         }
-        break;
     }
-    return (INT_PTR)FALSE;
+
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
