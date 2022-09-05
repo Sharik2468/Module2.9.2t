@@ -1,2 +1,11 @@
 ﻿  Module9.2t.cpp
+E:\Работы в универе\Курс\Module2.9.2t\Module9.2t\Delegate.h(47,23): warning C4018: <: несоответствие типов со знаком и без знака
+E:\Работы в универе\Курс\Module2.9.2t\Module9.2t\Module9.2t.cpp(219,31): warning C4244: аргумент: преобразование "int" в "Gdiplus::REAL", возможна потеря данных
+E:\Работы в универе\Курс\Module2.9.2t\Module9.2t\Module9.2t.cpp(219,24): warning C4244: аргумент: преобразование "int" в "Gdiplus::REAL", возможна потеря данных
+E:\Работы в универе\Курс\Module2.9.2t\Module9.2t\Module9.2t.cpp(219,20): warning C4244: аргумент: преобразование "int" в "Gdiplus::REAL", возможна потеря данных
+E:\Работы в универе\Курс\Module2.9.2t\Module9.2t\Module9.2t.cpp(219,16): warning C4244: аргумент: преобразование "int" в "Gdiplus::REAL", возможна потеря данных
+E:\Работы в универе\Курс\Module2.9.2t\Module9.2t\Module9.2t.cpp(322,53): warning C4244: аргумент: преобразование "int" в "Gdiplus::REAL", возможна потеря данных
+E:\Работы в универе\Курс\Module2.9.2t\Module9.2t\Module9.2t.cpp(322,39): warning C4244: аргумент: преобразование "int" в "Gdiplus::REAL", возможна потеря данных
+E:\Работы в универе\Курс\Module2.9.2t\Module9.2t\Module9.2t.cpp(323,69): warning C4244: аргумент: преобразование "int" в "Gdiplus::REAL", возможна потеря данных
+E:\Работы в универе\Курс\Module2.9.2t\Module9.2t\Module9.2t.cpp(323,47): warning C4244: аргумент: преобразование "int" в "Gdiplus::REAL", возможна потеря данных
   Module9.2t.vcxproj -> E:\Работы в универе\Курс\Module2.9.2t\Debug\Module9.2t.exe
